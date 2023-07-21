@@ -230,6 +230,7 @@ g_GDT:
     dq 0
 
     ; 32 code segment
+code_seg:
     dw 0FFFFh                   ; limit
     dw 0                        ; base
     db 0                        ; base
@@ -238,6 +239,7 @@ g_GDT:
     db 0                        ; base high
 
     ; 32 data segment
+data_seg:
     dw 0FFFFh                   ; limit
     dw 0                        ; base
     db 0                        ; base
@@ -245,13 +247,13 @@ g_GDT:
     db 11001111b                ; granularity
     db 0                        ; base high
 
-    ; 32 system segment
-    dw 0FFFFh                   ; limit
-    dw 0                        ; base
-    db 0                        ; base
-    db 10001010b                ; access
-    db 11001111b                ; granularity
-    db 0                        ; base high
+    ; ; 32 system segment
+    ; dw 0FFFFh                   ; limit
+    ; dw 0                        ; base
+    ; db 0                        ; base
+    ; db 10001010b                ; access
+    ; db 11001111b                ; granularity
+    ; db 0                        ; base high
 
 g_GDTDesc:
     dw g_GDTDesc - g_GDT - 1    ; size of gdt

@@ -3,3 +3,6 @@ bochslog.txt
 bx_enh_dbg.ini
 eMakefile
 build/*
+src/kernel/Elink.ld
+*.ex
+

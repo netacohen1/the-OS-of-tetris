@@ -2,7 +2,7 @@
 [extern main]
 
 section .text
-global start
-start:
+global _start
+_start:
     call main
     hlt

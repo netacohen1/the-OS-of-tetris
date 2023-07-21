@@ -19,9 +19,10 @@ static idtr_t idtr;
 
 
 void exception_handler(){
+    // TODO: change this to something better
     volatile char* video_memory = (volatile char*)0xA0000;
     *video_memory = 7;
-    /* __asm__ volatile("cli; hlt"); */
+   /* __asm__ volatile("cli; hlt"); */
 }
 
 void IDT_set_descriptor(u8 interrupt, void* isr, u8 flags){
@@ -40,7 +41,7 @@ void IDT_init(){
     idtr.limit = (u16)sizeof(idt) - 1;
 
     for(u8 interrupt=0; interrupt<32; interrupt++){
-        IDT_set_descriptor(interrupt, isr_stub_table[interrupt], INTERRUPT_GATE_FLAGS);
+        IDT_set_descriptor(interrupt, isr_stub_table[interrupt], TRAP_GATE_FLAGS);
     }
 
     __asm__ volatile("lidt %0": :"m"(idtr));
