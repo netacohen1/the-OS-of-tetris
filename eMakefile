@@ -1,0 +1,39 @@
+ASM=nasm
+CC=gcc
+LD=ld
+RM=rm
+OBJCOPY=objcopy
+
+SRC_DIR=src
+BUILD_DIR=build
+
+.PHONY: always $(BUILD_DIR)/main.bin $(BUILD_DIR)/kernel_entry.bin $(BUILD_DIR)/os-image.bin kernel.bin run debug clean
+
+always: $(BUILD_DIR)/os-image.img
+
+$(BUILD_DIR)/main.bin: $(SRC_DIR)/main.asm
+	$(ASM) -f bin -o $@ $<
+
+$(BUILD_DIR)/kernel_entry.o: $(SRC_DIR)/kernel_entry.asm
+	$(ASM) -f elf -o $@ $<
+
+$(BUILD_DIR)/kernel.o: $(SRC_DIR)/kernel.c
+	$(CC) -m32 -ffreestanding -c $< -o $@
+
+$(BUILD_DIR)/kernel.bin: $(BUILD_DIR)/kernel.o $(BUILD_DIR)/kernel_entry.o
+	$(LD) -m elf_i386 -o $@ -Ttext 0x1000 $^ --oformat binary
+
+$(BUILD_DIR)/os-image.img: $(BUILD_DIR)/main.bin $(BUILD_DIR)/kernel.bin
+	dd if=/dev/zero of=$@ bs=512 count=2880
+	dd if=$(BUILD_DIR)/main.bin of=$@ conv=notrunc bs=512 count=1 seek=0
+	dd if=$(BUILD_DIR)/kernel.bin of=$@ conv=notrunc bs=512 count=128 seek=1
+
+run: $(BUILD_DIR)/os-image.img
+	qemu-system-i386  -fda $<
+
+debug: $(BUILD_DIR)/os-image.img
+	bochs -f bochs_config
+	# for logs -- log: bochslog.txt
+
+clean:
+	$(RM) -rf $(BUILD_DIR)/*
