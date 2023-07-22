@@ -1,9 +1,10 @@
 #include "screen.h"
 #include "util.h"
 /* #include "idt.h" */
+#include "interrupts.h"
 
 void main(){
-    /* IDT_init(); */
+    IDT_init();
     volatile char* video_memory = (volatile char*)0xA0000;
     set_palette();
 

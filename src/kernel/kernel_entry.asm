@@ -1,7 +1,7 @@
 [bits    32]
 [extern main]
 
-section .text
+section .entry
 global _start
 _start:
     call main
