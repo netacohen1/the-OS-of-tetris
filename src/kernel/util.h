@@ -20,9 +20,10 @@ typedef u8 bool;
 #define true (1)
 #define false (0)
 
-// CLI and STI
+// CLI, STI and HLT
 #define CLI() __asm__ volatile("cli")
 #define STI() __asm__ volatile("sti")
+#define HLT() __asm__ volatile("hlt")
 
 // set and unset a flag
 #define SETFLAG(x, flag) x |= flag
@@ -30,6 +31,9 @@ typedef u8 bool;
 
 // define PACKED
 #define PACKED __attribute__((packed))
+
+// define CDECL
+#define CDECL __attribute__((cdecl))
 
 // io port read and write
 static inline void outb(u16 port, u8 val){

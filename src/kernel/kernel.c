@@ -1,10 +1,12 @@
 #include "screen.h"
 #include "util.h"
-/* #include "idt.h" */
-#include "interrupts.h"
+#include "idt.h"
 
 void main(){
     IDT_init();
+    
+    __asm__ volatile("int $0x1");
+
     volatile char* video_memory = (volatile char*)0xA0000;
     set_palette();
 
@@ -14,4 +16,3 @@ void main(){
         }
     }
 }
-

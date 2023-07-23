@@ -127,7 +127,7 @@ load_kernel:
     push dx
 
     mov bx, KERNEL_OFFSET
-    mov dh, 0xa             ;number of sectors to read
+    mov dh, 0x20             ;number of sectors to read - might change
     mov dl, [BOOT_DRIVE]
     call disk_load
 
