@@ -20,10 +20,11 @@ typedef u8 bool;
 #define true (1)
 #define false (0)
 
-// CLI, STI and HLT
+// CLI, STI, HLT and BreakPoint
 #define CLI() __asm__ volatile("cli")
 #define STI() __asm__ volatile("sti")
 #define HLT() __asm__ volatile("hlt")
+#define BP()  __asm__ volatile("xchgw %bx, %bx"); // bochs magic break point
 
 // set and unset a flag
 #define SETFLAG(x, flag) x |= flag
@@ -35,24 +36,15 @@ typedef u8 bool;
 // define CDECL
 #define CDECL __attribute__((cdecl))
 
-// io port read and write
-static inline void outb(u16 port, u8 val){
-    // send a byte in val to the port specified
-    __asm__ volatile("outb %0, %1":: "a" (val), "Nd" (port): "memory");
-}
 
-static inline u8 inb(u16 port){
-    // read a byte from the port specified and return
-    u8 ret;
-    __asm__ volatile("inb %1, %0" : "=a" (ret): "Nd" (port): "memory");
+// declare printf - implentation is in printf.c
+void QemuPrintStr(i8* s);
+void QemuPrintf(const i8* str, ...);
 
-    return ret;
-}
-
-#define UNUSED_PORT 0x80
-static inline void io_wait(){
-    outb(UNUSED_PORT, 0);
-    return;
-}
+int init_serial();
+void write_serial(char a);
+void io_wait();
+u8 inb(u16 port);
+void outb(u16 port, u8 val);
 
 #endif

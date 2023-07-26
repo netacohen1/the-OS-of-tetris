@@ -19,13 +19,9 @@ typedef struct{
 
 /* __attribute__((aligned(0x10))) static  */
 idt_entry_32 idt[256];
-/* idtr_32 idtr = {sizeof(idt)-1, idt}; */
-idtr_32 idtr = {255, idt};
+idtr_32 idtr = {sizeof(idt)-1, idt};
+/* idtr_32 idtr = {255, idt}; */
 
-void CDECL IDT_load(idtr_32* idtr);
-/* void IDT_load(idtr_32* idtr){ */
-/*     __asm__ volatile("lidt %0": :"m"(idtr)); */
-/* } */
 
 void IDT_set_gate(int interrupt, void (*base)(), u16 segmentDescriptor, u8 flags){
     idt[interrupt].isr_low = (u32)base & 0xFFFF;
@@ -43,6 +39,7 @@ void IDT_disable_gate(int interrupt){
     UNSETFLAG(idt[interrupt].attribute, 0x80);
 }
 
+void CDECL IDT_load(idtr_32* idtr);
 void IDT_init(){
     IDT_load(&idtr);
     ISR_init();

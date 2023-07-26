@@ -30,7 +30,8 @@ always:
 	mkdir -p $(BUILD)
 
 run: $(BUILD)/os-image.img
-	qemu-system-i386 -fda $< 
+	# qemu-system-i386 -serial file:serial.log -fda $< 
+	qemu-system-i386 -serial stdio -fda $< 
 
 debug: $(BUILD)/os-image.img
 	bochs -f bochs_config

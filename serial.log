@@ -1,0 +1,4 @@
+Unhandeled exception 5: Bound Range Exceeded
+Registers values: eax->0 ebx->0 ecx->0 edx->0 ebp->0 esi->0 edi->0
+Interrupt->5, error_code->5
+KERNEL PANIC!!

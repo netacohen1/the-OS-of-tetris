@@ -11,15 +11,15 @@ ISR%1:
 %macro ISR_ERRORCODE 1
 global ISR%1:
 ISR%1:
-                            ; error code is pushed by the cpu
-    push %1                 ; push interrupt number
+                                ; error code is pushed by the cpu
+    push %1                     ; push interrupt number
     jmp isr_common
 %endmacro
 
 %include "isr_functions.as"
 
 
-extern ISR_handler
+extern ISR_regsHandler
 isr_common:
     pusha
 
@@ -34,7 +34,7 @@ isr_common:
     mov gs, ax
 
     push esp                ; address of stack
-    call ISR_handler        ; call the C function
+    call ISR_regsHandler        ; call the C function
     add esp, 4
 
     pop eax                 ; restore all the segments
