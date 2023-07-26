@@ -1,4 +1,6 @@
-Unhandeled exception 5: Bound Range Exceeded
-Registers values: eax->0 ebx->0 ecx->0 edx->0 ebp->0 esi->0 edi->0
-Interrupt->5, error_code->5
+Unhandeled exception 3: Breakpoint
+Registers values: 
+eax->0 ebx->0 ecx->3f8 edx->0 ebp->7bf4 esi->e0000 edi->ffac
+eip->38d6 cs->8 eflags->46 esp->0 ss->0
+Interrupt->3, error_code->0
 KERNEL PANIC!!

@@ -72,15 +72,18 @@ void QemuPrintf(const i8* str, ...){
 
                     case 'd':                       // print signed base 10
                         printf_signed((i32)*argp, 10);
+                        argp++;
                         break;
 
                     case 'u':                       // print unsigned base 10
                         printf_unsigned((u32)*argp, 10);
+                        argp++;
                         break;
 
                     case 'x':
                     case 'p':                       // print unsigned base 16
                         printf_unsigned((u32)*argp, 16);
+                        argp++;
                         break;
 
                     default: break;                 // ignore invalid char

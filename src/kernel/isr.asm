@@ -21,6 +21,7 @@ ISR%1:
 
 extern ISR_regsHandler
 isr_common:
+    xchg bx, bx
     pusha
 
     xor eax, eax

@@ -6,11 +6,6 @@
 void main(){
     IDT_init();
     init_serial();
-    /* QemuPrintf("hello 0xxx%x\n", 149); */
-
-    __asm__ volatile("int $0x08");
-    /* __asm__ volatile("int $0x3"); */
-    /* __asm__ volatile("int $0x4"); */
 
     volatile char* video_memory = (volatile char*)0xA0000;
     set_palette();
