@@ -1,6 +1,5 @@
 #include "idt.h"
 #include "util.h"
-#include "isr.h"
 
 typedef struct {
     u16     isr_low;            // lower 16 bit of ISR's address
@@ -42,5 +41,4 @@ void IDT_disable_gate(int interrupt){
 void CDECL IDT_load(idtr_32* idtr);
 void IDT_init(){
     IDT_load(&idtr);
-    ISR_init();
 }

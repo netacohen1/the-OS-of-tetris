@@ -37,14 +37,18 @@ typedef u8 bool;
 #define CDECL __attribute__((cdecl))
 
 
-// declare printf - implentation is in printf.c
+// declare printf --> printf.c
 void QemuPrintStr(i8* s);
 void QemuPrintf(const i8* str, ...);
 
+// communiation via ports --> io.c
 int init_serial();
 void write_serial(char a);
 void io_wait();
 u8 inb(u16 port);
 void outb(u16 port, u8 val);
+
+// initialize things --> hal.c
+void HAL_init();
 
 #endif

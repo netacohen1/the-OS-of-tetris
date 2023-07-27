@@ -57,6 +57,8 @@ void CDECL ISR_regsHandler(Registers_t* regs){
         QemuPrintf("eip->%x cs->%x eflags->%x esp->%x ss->%x\n", regs->eip, regs->cs, regs->eflags, regs->esp, regs->ss);
 
         QemuPrintf("Interrupt->%x, error_code->%x\n", regs->interrupt, regs->error);
-        QemuPrintf("KERNEL PANIC!!\n");
+        QemuPrintf("KERNEL PANIC!!\n\n");
+        CLI();
+        HLT();
     }
 }
