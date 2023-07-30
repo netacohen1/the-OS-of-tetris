@@ -19,7 +19,8 @@
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM	0x10		/* Special fully nested (not) */
 
-void pic_init(int offset1, int offset2){
+void pic_init(i32 offset1, i32 offset2){
+    // initializing the pic
     // ICW1  --  starting the initialization
     outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);
     io_wait();
@@ -61,6 +62,7 @@ void PIC_sendEOI(u8 irq_line){
 }
 
 void PIC_mask(u8 irq_line){
+    // mask interrupt (make the pic ignore it)
     u16 port;
     u32 value;
 
@@ -76,6 +78,7 @@ void PIC_mask(u8 irq_line){
 }
 
 void PIC_clear_mask(u8 irq_line){
+    // unmask interrupt (make the pic to pay attention to it)
     u16 port;
     u32 value;
 
@@ -90,8 +93,8 @@ void PIC_clear_mask(u8 irq_line){
     outb(port, value);
 }
 
-#define PIC_READ_ISR 0x0b
 #define PIC_READ_IRR 0x0a
+#define PIC_READ_ISR 0x0b
 u16 PIC_get_isr(){
     outb(PIC1_COMMAND, PIC_READ_ISR);
     outb(PIC2_COMMAND, PIC_READ_ISR);

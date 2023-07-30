@@ -1,4 +1,5 @@
 #include "isr.h"
+#include "idt.h"
 #include "util.h"
 
 ISR_handler ISR_handlerArray[256];
@@ -44,12 +45,12 @@ void ISR_init(){
 }
 
 void CDECL ISR_regsHandler(Registers_t* regs){
-    if (ISR_handlerArray[regs->interrupt]){
+    if (ISR_handlerArray[regs->interrupt] != 0){
         ISR_handlerArray[regs->interrupt](regs);
 
-    } else if (regs->interrupt >= 32) { 
+    } else if (regs->interrupt >= 32) {                                                         // this is a regular interrupt
         QemuPrintf("Unhandeled interrupt %d --> 0x%x\n", regs->interrupt, regs->interrupt);
-    } else {
+    } else {                                                                                    // this is an exception
         QemuPrintf("Unhandeled exception %x: ", regs->interrupt);
         QemuPrintf("%s\n", g_Exceptions[regs->interrupt]);
 
@@ -61,4 +62,8 @@ void CDECL ISR_regsHandler(Registers_t* regs){
         CLI();
         HLT();
     }
+}
+
+void ISR_RegisterHandler(i32 isr, ISR_handler handler){
+    ISR_handlerArray[isr] = handler;
 }

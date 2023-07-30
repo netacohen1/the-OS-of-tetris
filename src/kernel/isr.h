@@ -14,5 +14,6 @@ typedef void (*ISR_handler)(Registers_t* regs);
 
 void ISR_init();
 void CDECL ISR_regsHandler(Registers_t* regs);
+void ISR_RegisterHandler(i32 isr, ISR_handler handler);
 
 #endif

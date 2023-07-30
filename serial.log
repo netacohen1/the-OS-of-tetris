@@ -1,6 +1,5 @@
-Unhandeled exception 3: Breakpoint
-Registers values: 
-eax->0 ebx->0 ecx->3f8 edx->0 ebp->7bf4 esi->e0000 edi->ffac
-eip->38d6 cs->8 eflags->46 esp->0 ss->0
-Interrupt->3, error_code->0
+
+Unhandeled exception 0: Division Error
+Interrupt->0, error_code->0
 KERNEL PANIC!!
+

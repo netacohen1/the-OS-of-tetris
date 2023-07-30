@@ -48,7 +48,4 @@ void io_wait();
 u8 inb(u16 port);
 void outb(u16 port, u8 val);
 
-// initialize things --> hal.c
-void HAL_init();
-
 #endif
