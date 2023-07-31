@@ -32,7 +32,7 @@ start:
     call changeVideoMode        ; set the video mode and clear the screen
 
 ;----------32 bit change----------
-    cll
+    ;cll
     call EnableA20   
     call LoadGDT
 
@@ -123,81 +123,91 @@ changeVideoMode:
 bits 16
 load_kernel:
     ; loads the kernel from memory
-    push bx
-    push dx
-
-    mov bx, KERNEL_OFFSET
-    mov dh, 0x20             ;number of sectors to read - might change
-    mov dl, [BOOT_DRIVE]
-    call disk_load
-
-    pop dx
-    pop bx
-    ret
-
-bits 16
-disk_load:
     push ax
     push bx
     push cx
     push dx
     push di
+    push si
+    push bp
 
-    mov ah, 02h     ; mode, 2=read from disk
-    mov al, dh      ; num of sectors to read
-    mov cl, 02h     ; start from sector
+.disk_load:
+    mov di, KERNEL_OFFSET
+    mov si, KERNEL_LBA
 
-    mov ch, 0x00    ; cylinder num
-    mov dh, 0x00    ; head num
+.read_sectors_loop:
+    mov bp, 3                   ; num of retries 
+    call lba_to_chs             ; convert lba to chs
+    mov bx, di
+    ;xor bx, bx                  ; set where to load the kernel
 
-    mov di, 3       ; retry count
+.retry:
+    mov ax, 0x0201               ; ah = mode, 0x02 - read sectors from disk | al = num of sectors to read
 
-.loop:
-    pusha
-    stc             ; set carry
+    int 0x13                    ; call the interrupt
+    jc .disk_error              ; if carry flag set -> error
 
-    int 0x013
-    jnc .done
+.success:
+    add di, 512 
+    inc si
 
-    ; read failed
-.fail:
-    popa
-    call disk_reset
-
-    dec di
-    test di, di
-    jnz .loop
-    jmp floppy_error
+.chk_for_last_sector:
+    cmp si, NUM_OF_SECTORS
+    jl .read_sectors_loop
 
 .done:
-    popa
-
+    pop bp
+    pop si
     pop di
     pop dx
     pop cx
     pop bx
     pop ax
     ret
-    
-;
-; Resets disk controller
-; Parameters:
-;   dl: drive number
-;
-disk_reset:
-    pusha
-    mov ah, 0
-    stc
-    int 13h
-    jc floppy_error
-    popa
-    ret
 
-floppy_error:
+.disk_error:
+    xor ah, ah
+    int 13h
+    dec bp
+    test bp, bp
+    jnz .retry
+
+.error_end:
     mov si, msg_disk_error
     call puts
     call wait_key_and_reboot
 
+;
+; LBA to CHS
+;   Sector      = (LBA % SPT) + 1      SPT = SectorsPerTrack
+;   Head        = (LBA / SPT) % Heads
+;   Cylinder    = (LBA / SPT) / Heads
+;
+; Inputs:   si = LBA
+; Outputs:  dl = boot drive
+;           dh = head
+;           ch = cylinder (lower 8 bit of cylinder)
+;           cl = upper 2 bit is upper 2 bit of cylinder and the rest is sector
+;           
+
+lba_to_chs:
+    push ax 
+    mov ax, si
+    xor dx, dx          ; clear dx
+    div word [SPT]      ; ax = LBA / SPT | dx = LBA % SPT
+    mov cl, dl
+    inc cl              ; cl = (LBA % SPT) + 1
+    
+    xor dx, dx
+    div word [numHeads] ; ax = (LBA / SPT) / HEADS | dx = (LBA / SPT) % HEADS
+    mov dh, dl          ; dh = (LBA / SPT) % HEADS 
+    mov dl, [BOOT_DRIVE]
+    mov ch, al          ; ch = lower 8 bit of - (LBA / SPT) / HEADS
+    shl ah, 6           ; store only lower 2 bit of ah
+    or cl, ah           ; upper 2 bit of sector in upper 2 bit
+    pop ax
+    ret
+    
 puts:
     ; prints a string from si to the screen
     push si
@@ -221,6 +231,7 @@ puts:
     ret
 
 wait_key_and_reboot:
+    cli
     mov ah, 0
     int 16h                     ; wait for keypress
     jmp 0FFFFh:0                ; jump to beginning of BIOS, should reboot
@@ -259,13 +270,18 @@ g_GDTDesc:
     dw g_GDTDesc - g_GDT - 1    ; size of gdt
     dd g_GDT                    ; address of gdt
 
-BOOT_DRIVE db 0             ; boot drive variable
+BOOT_DRIVE  db 0                ; boot drive variable
+numHeads    dw 2                ; floppy disk has 2 heads and 18 sectors per track
+SPT         dw 18
 
 msg_hello: db "hello there!", ENDL, 0
 msg_disk_error: db "Error in disk read!", ENDL, 0
 msg_disk_success: db "Disk read successully!!", ENDL, 0
 
-KERNEL_OFFSET   equ 0x1000    ; where to load the kernel
+NUM_OF_SECTORS  equ 0x36        ; number of sectors to read from the disk
+
+KERNEL_LBA      equ 1
+KERNEL_OFFSET   equ 0x1000      ; where to load the kernel
 KERNEL_OFF      equ 0x00
 
 kbdData         equ 0x60
