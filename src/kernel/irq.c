@@ -6,10 +6,6 @@
 #define PIC_OFFSET 0x20
 IRQ_Handler g_IRQHandlers[16];
 
-/* void timer(Registers_t *regs){ */
-/*     QemuPrintf("."); */
-/* } */
-
 void IRQ_handler(Registers_t *regs){
     u8 irq = regs->interrupt - PIC_OFFSET;
     
@@ -28,6 +24,8 @@ void IRQ_init(){
     for(u8 i=0; i<16; i++){
         ISR_RegisterHandler(PIC_OFFSET + i, IRQ_handler);
     }
+
+    // register my functions as IRQs
 }
 
 void IRQ_RegisterHandler(i32 irq, IRQ_Handler handler){

@@ -1,9 +1,15 @@
 #include "util.h"
+#include "screen.h"
 
 #define VGA_MASK        0x3c6
 #define VGA_READ_ADD    0x3c7
 #define VGA_WRITE_ADD   0x3c8
 #define VGA_DATA        0x3c9
+
+void plot_pixel(i32 x, i32 y, u8 color){
+    volatile u8* pos = (volatile u8*)VIDEO_MEMORY + SCREEN_WIDTH * y + x;
+    *pos = color;
+}
 
 void set_palette(){
     outb(VGA_WRITE_ADD, 0);
@@ -19,5 +25,13 @@ void set_palette(){
     outb(VGA_DATA, 0xff >> 2);
     outb(VGA_DATA, 0xff >> 2);
     outb(VGA_DATA, 0xff >> 2);
+}
 
+u8 COLOR(u8 r, u8 g, u8 b){
+    // for each color we take the 3 (or 2) MSB and combine them to a number between 0-255
+    u8 color = 0;
+    color |= ((b / (256 / 4)) & 0x03) << 0;
+    color |= ((g / (256 / 8)) & 0x07) << 2;
+    color |= ((r / (256 / 8)) & 0x07) << 5;
+    return color;
 }
