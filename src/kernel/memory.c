@@ -1,7 +1,7 @@
 #include "util.h"
 #include "memory.h"
 
-void memset(void* src, u8 val, size_t len){
+void memset(void* src, u8 val, u32 len){
     u8* ptr = (u8*)src;
     while(len--){
         *ptr++ = val;

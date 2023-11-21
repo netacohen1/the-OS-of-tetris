@@ -88,15 +88,7 @@ enum KEYBOARD_SPECIAL_KEYS {
     DOWN               = 0x80
 };
 
-/* u8 keybrd_ctrl_read_status();           // read status from keyboard controller */
-/* void keybrd_ctrl_send_cmd(u8 cmd);      // send command byte to keyboard controller */
-/* u8 keybrd_enc_read_buffer();            // read buffer from keyboard encoder */
-/* void keybrd_enc_send_cmd(u8 cmd);        // send command to keyboard encoder */
-
-void keybrd_install();                      // register the keyboard handler in irq
 bool is_special_key(u8 key);                // check in mode if key is pressed
-bool is_key_pressed(u8 c);
+bool is_key_pressed(u8 key);                // check if key is pressed
 
-void keybrd_set_leds(bool num, bool caps, bool scroll); // turn on/off led lights
-                                                        //
 #endif

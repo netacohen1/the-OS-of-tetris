@@ -23,54 +23,6 @@ u8 keybrd_layout[2][128] = {
 
 struct keybrd keybrdState;
 
-// read status from keyboard controller
-u8 keybrd_ctrl_read_status(){
-    return inb(KEYBOARD_CONTROLLER);
-}
-
-// send command byte to keyboard controller
-void keybrd_ctrl_send_cmd(u8 cmd){
-    while (1)
-        if ((keybrd_ctrl_read_status() & INPUT_BUFFER_STATUS) == 0)
-            break;
-    
-    outb(KEYBOARD_CONTROLLER, cmd);
-}
-
-// read buffer from keyboard encoder
-u8 keybrd_enc_read_buffer(){
-    return inb(KEYBOARD_ENCODER);
-}
-
-// send command to keyboard encoder
-void keybrd_enc_send_cmd(u8 cmd){
-    while (1)
-        if ((keybrd_ctrl_read_status() & INPUT_BUFFER_STATUS) == 0)
-            break;
-
-    outb(KEYBOARD_ENCODER, cmd);
-}
-
-// turn on/off led lights
-void keybrd_set_leds(bool num, bool caps, bool scroll){
-    u8 data = 0;
-
-    data |= (scroll) & 1;
-    data |= (num << 2) & 1;
-    data |= (caps << 3) & 1;
-
-    /* keybrd_ctrl_send_cmd(KEYBOARD_ENC_CMD_LED); */
-    io_wait();
-    keybrd_enc_send_cmd(data);
-}
-
-void keybrd_setup(){
-    keybrd_ctrl_send_cmd(0xf0);
-    io_wait();
-    QemuPrintf("0x%x\n", inb(0x60));
-    /* keybrd_enc_send_cmd(0x00); */
-}
-
 void keybrd_handler(Registers_t *regs){
     u8 scanCode = inb(0x60);
     if (scanCode == 0xe0){
@@ -119,8 +71,8 @@ bool is_special_key(u8 key){
     return keybrdState.mode & key;
 }
 
-bool is_key_pressed(u8 c){
-    return keybrdState.keysPressed[c];
+bool is_key_pressed(u8 key){
+    return keybrdState.keysPressed[key];
 }
 
 void keybrd_install(){
