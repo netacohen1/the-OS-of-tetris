@@ -34,7 +34,7 @@ run: $(BUILD)/os-image.img
 	qemu-system-i386 -serial stdio -fda $< 
 
 debug: $(BUILD)/os-image.img
-	bochs -f bochs_config
+	bochs-debugger -f bochs_config
 	# for logs -- log: bochslog.txt
 
 clean:

@@ -1,10 +1,19 @@
 #include "util.h"
 #include "memory.h"
 
-u32* memset(u32* ptr, u8 c, u32 len){
-    u32* startPtr = ptr;
+void memset(void* src, u8 val, size_t len){
+    u8* ptr = (u8*)src;
     while(len--){
-        *ptr++ = (u8)c;
+        *ptr++ = val;
     }
-    return startPtr;
+}
+
+void* memcpy(void* dst, void* src, u32 len){
+    u8 *d = (u8*)dst;
+    const u8 *s = (const u8*)src;
+    
+    while (len-- > 0){
+        *d++ = *s++;
+    }
+    return dst;
 }

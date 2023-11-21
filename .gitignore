@@ -1,0 +1,7 @@
+build/*
+.git
+bochs_config
+bx_enh_dbg.ini
+debug.sh
+serial.log
+github_key
