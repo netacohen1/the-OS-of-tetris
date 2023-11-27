@@ -13,7 +13,9 @@ void* memcpy(void* dst, void* src, u32 len){
     const u8 *s = (const u8*)src;
     
     while (len-- > 0){
-        *d++ = *s++;
+        *d = *s;
+        d++;
+        s++;
     }
     return dst;
 }

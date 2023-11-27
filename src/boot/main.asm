@@ -51,8 +51,8 @@ jmpToKernel:
     mov ds, ax
     mov ss, ax
 
-    call KERNEL_OFFSET
-    hlt
+
+    jmp KERNEL_OFFSET
 
 bits 16
 EnableA20:

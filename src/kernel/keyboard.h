@@ -88,6 +88,7 @@ enum KEYBOARD_SPECIAL_KEYS {
     DOWN               = 0x80
 };
 
+void keybrd_install();
 bool is_special_key(u8 key);                // check in mode if key is pressed
 bool is_key_pressed(u8 key);                // check if key is pressed
 

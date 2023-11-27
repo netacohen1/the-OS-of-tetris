@@ -10,7 +10,6 @@ void main(){
     HAL_init();
     set_palette();
 
-    screen_swap();
     clear_screen(COLOR(0,0,0));
     screen_swap();
 

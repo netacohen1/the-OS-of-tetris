@@ -4,11 +4,7 @@
 
 static u8 *BUFFER = (u8*) 0xA0000;
 
-u8 buffers[2][SCREEN_SIZE];
-u8 current_buffer = 0;
-
-#define CURRENT     (buffers[current_buffer])
-#define SWAP()      (current_buffer = 1 - current_buffer)
+u8 second_buffer[SCREEN_SIZE];
 
 #define VGA_MASK        0x3c6
 #define VGA_READ_ADD    0x3c7
@@ -16,18 +12,18 @@ u8 current_buffer = 0;
 #define VGA_DATA        0x3c9
 
 void screen_swap(){
-    memcpy(BUFFER, CURRENT, SCREEN_SIZE);
-    SWAP();
+    memcpy(BUFFER, second_buffer, SCREEN_SIZE);
 }
 
 void clear_screen(u8 color){
-    memset(&CURRENT, color, SCREEN_SIZE);
+    memset((u8*)second_buffer, color, SCREEN_SIZE);
 }
 
-void plot_pixel(i32 x, i32 y, u8 color){
-    volatile u8* pos = CURRENT + SCREEN_WIDTH * y + x;
+void plot_pixel(u32 x, u32 y, u8 color){
+    volatile u8* pos = second_buffer + SCREEN_WIDTH * y + x;
     *pos = color;
 }
+
 
 void set_palette(){
     outb(VGA_WRITE_ADD, 0);
