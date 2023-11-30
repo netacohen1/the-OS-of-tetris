@@ -13,6 +13,13 @@ void timerFunction(Registers_t *regs){
     state.ticks++;
 }
 
+void wait(u32 miliseconds){
+    u64 start = state.ticks;
+    while (state.ticks - start < miliseconds){
+
+    }
+}
+
 void PIT_setCount(){
     // set the frequency of the pit to 1/TIMER_FREQ
     state.divisor = TIMER_FREQ; 

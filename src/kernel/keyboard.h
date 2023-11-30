@@ -6,6 +6,8 @@
 #define KEYBOARD_ENCODER        0x60
 #define KEYBOARD_CONTROLLER     0x64
 
+#define RELEASE_MARGIN          0x80
+
 #define KEY_NULL                0
 #define KEY_ESC                 0x18        // ascii for escape
 #define KEY_BACKSPACE           '\b'        // backspace
@@ -44,9 +46,9 @@
 #define KEY_END                 0x93
 #define KEY_PAGE_UP             0x94
 #define KEY_PAFE_DOWN           0x95
-#define KEY_LEFT                0x4b        // release - 0xcb
 #define KEY_UP                  0x48        // release - 0xc8
-#define KEY_RIGHT               0x4D        // release - 0xcd
+#define KEY_LEFT                0x4b        // release - 0xcb
+#define KEY_RIGHT               0x4d        // release - 0xcd
 #define KEY_DOWN                0x50        // release - 0xd0
 
 enum KEYBRD_CTRL_STATUS_BIT{
@@ -65,12 +67,14 @@ extern u8 keybrd_layout[2][128];
 
 // keybrd struct holding important info
 struct keybrd {
+    u8 pressedStack[128];
+    u8 stackPointer;
     bool keysPressed[128];
     u8 mode;
-    /* MSB -   DOWN */
-    /*         RIGHT */
-    /*         UP */
-    /*         LEFT */
+    /* MSB -   0 */
+    /*         0 */
+    /*         0 */
+    /*         0 */
     /*         CAPS LOCK */
     /*         ALT */
     /*         CTRL */
@@ -91,5 +95,6 @@ enum KEYBOARD_SPECIAL_KEYS {
 void keybrd_install();
 bool is_special_key(u8 key);                // check in mode if key is pressed
 bool is_key_pressed(u8 key);                // check if key is pressed
+u8 getPressed();
 
 #endif

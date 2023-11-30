@@ -14,6 +14,7 @@
 #define PIT_SET         0x36
 
 void timer_install();
+void wait(u32 miliseconds);
 u64 get_timer();
 
 #endif

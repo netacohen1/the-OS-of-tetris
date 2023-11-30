@@ -24,6 +24,32 @@ void plot_pixel(u32 x, u32 y, u8 color){
     *pos = color;
 }
 
+void plot_rect(i32 x, i32 y, u32 width, u32 height, u8 color){
+    if (x > SCREEN_WIDTH || y > SCREEN_HEIGHT)
+        return;
+    if (x < 0){
+        width += x;
+        x = 0;
+    } else if (x + width > SCREEN_WIDTH){
+        width = SCREEN_WIDTH - x;
+    }
+    if (y < 0){
+        height += y;
+        y = 0;
+    } else if (y + height > SCREEN_HEIGHT){
+        height = SCREEN_HEIGHT - y;
+    }
+
+    u8* where = second_buffer + SCREEN_WIDTH * y + x;
+
+    for (u32 i=0; i<height; i++){
+        for (u32 j=0; j<width; j++){
+            *where++ = color;
+        }
+
+        where += SCREEN_WIDTH - width;
+    }
+}
 
 void set_palette(){
     outb(VGA_WRITE_ADD, 0);

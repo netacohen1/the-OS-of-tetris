@@ -11,13 +11,28 @@ void main(){
     set_palette();
 
     clear_screen(COLOR(0,0,0));
+    int x = 100, y = 100;
+    plot_rect(250, 100, 100, 100, COLOR(255,0,0));
     screen_swap();
 
     while (true){
-        if (is_key_pressed('a')){
-            clear_screen(COLOR(255,0,0));
-            screen_swap();
+        switch (getPressed()) {
+            case KEY_RIGHT:
+                x += 5;
+                break;
+            case KEY_LEFT:
+                x -= 5;
+                break;
+            case KEY_UP:
+                y -= 5;
+                break;
+            case KEY_DOWN:
+                y += 5;
+                break;
         }
+        clear_screen(COLOR(0,0,0));
+        plot_rect(x, y, 90, 100, COLOR(255,0,0));
+        screen_swap();
     }
 
     while(1){

@@ -8,6 +8,7 @@
 
 void set_palette();
 void plot_pixel(u32 x, u32 y, u8 color);
+void plot_rect(i32 x, i32 y, u32 width, u32 height, u8 color);
 void screen_swap();
 void clear_screen(u8 color);
 u8 COLOR(u8 r, u8 g, u8 b);
